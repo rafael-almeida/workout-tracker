@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { ChevronLeft, SquarePen } from 'lucide-vue-next'
 import ExerciseCard from '../components/ExerciseCard.vue'
 import { sessions as allSessions, exercises as allExercises } from '../lib/data'
 
@@ -36,12 +37,12 @@ const goToEdit = () => {
 <template>
   <section>
     <div class="mb-12 flex items-center justify-between border-b border-gray-300 pb-6">
-      <button class="h-8 w-8 cursor-pointer rounded border border-gray-300" @click="goBack">
-        Back
+      <button class="flex h-7 w-7 cursor-pointer items-center justify-center" @click="goBack">
+        <ChevronLeft :size="28" />
       </button>
       <h1 class="text-3xl font-bold">{{ session.sessionName }}</h1>
-      <button class="h-8 w-8 cursor-pointer rounded border border-gray-300" @click="goToEdit">
-        Edit
+      <button class="flex h-7 w-7 cursor-pointer items-center justify-center" @click="goToEdit">
+        <SquarePen :size="20" />
       </button>
     </div>
 
