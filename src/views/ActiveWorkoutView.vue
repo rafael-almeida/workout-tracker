@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
 import { ChevronLeft, SquarePen } from 'lucide-vue-next'
 import ExerciseCard from '../components/ExerciseCard.vue'
-import { sessions as allSessions, exercises as allExercises } from '../lib/data'
 import type { Session, Exercise, SessionId, ExerciseId, SetId } from '../lib/data'
+import db from '../lib/db'
 
 const props = defineProps<{
   sessionId: string
@@ -13,17 +13,24 @@ const props = defineProps<{
 const router = useRouter()
 
 const sessionId = Number(props.sessionId) as SessionId
-const session = ref<Session>(allSessions.find((s) => s.sessionId === sessionId)!)
-const exercises = ref<Exercise[]>(
-  allExercises.filter((e) => e.sessionId === session.value.sessionId),
-)
+const session = ref<Session | null>(null)
+const exercises = ref<Exercise[]>([])
 
-const updateSetCompleted = (exerciseId: ExerciseId, setId: SetId, completed: boolean) => {
+onMounted(async () => {
+  const allSessions = await db.store('sessions').getAll<Session>()
+  session.value = allSessions.find((s) => s.sessionId === sessionId) || null
+
+  const allExercises = await db.store('exercises').getAll<Exercise>()
+  exercises.value = allExercises.filter((e) => e.sessionId === sessionId)
+})
+
+const updateSetCompleted = async (exerciseId: ExerciseId, setId: SetId, completed: boolean) => {
   const exercise = exercises.value.find((e) => e.exerciseId === exerciseId)
   if (exercise) {
     const set = exercise.sets.find((s) => s.setId === setId)
     if (set) {
       set.completed = completed
+      await db.store('exercises').save(String(exerciseId), toRaw(exercise))
     }
   }
 }
@@ -38,7 +45,7 @@ const goToEdit = () => {
 </script>
 
 <template>
-  <section>
+  <section v-if="session">
     <div class="mb-12 flex items-center justify-between border-b border-gray-300 pb-6">
       <button class="flex h-7 w-7 cursor-pointer items-center justify-center" @click="goBack">
         <ChevronLeft :size="28" />
