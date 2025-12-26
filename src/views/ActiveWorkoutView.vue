@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
 import { ChevronLeft, SquarePen } from 'lucide-vue-next'
 import ExerciseCard from '../components/ExerciseCard.vue'
@@ -24,12 +24,13 @@ onMounted(async () => {
   exercises.value = allExercises.filter((e) => e.sessionId === sessionId)
 })
 
-const updateSetCompleted = (exerciseId: ExerciseId, setId: SetId, completed: boolean) => {
+const updateSetCompleted = async (exerciseId: ExerciseId, setId: SetId, completed: boolean) => {
   const exercise = exercises.value.find((e) => e.exerciseId === exerciseId)
   if (exercise) {
     const set = exercise.sets.find((s) => s.setId === setId)
     if (set) {
       set.completed = completed
+      await db.store('exercises').save(String(exerciseId), toRaw(exercise))
     }
   }
 }
