@@ -1,15 +1,25 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { sessions, exercises, type Exercise, type SessionId } from '../lib/data'
+import type { Exercise, SessionId, Session } from '../lib/data'
+import db from '../lib/db'
 
 const router = useRouter()
+
+const sessions = ref<Session[]>([])
+const exercises = ref<Exercise[]>([])
+
+onMounted(async () => {
+  sessions.value = await db.store('sessions').getAll<Session>()
+  exercises.value = await db.store('exercises').getAll<Exercise>()
+})
 
 const goToWorkout = (sessionId: SessionId) => {
   router.push(`/workout/${sessionId}`)
 }
 
 const getExercisesForSession = (sessionId: SessionId): Exercise[] => {
-  return exercises.filter((e) => e.sessionId === sessionId)
+  return exercises.value.filter((e) => e.sessionId === sessionId)
 }
 </script>
 
