@@ -1,3 +1,5 @@
+import localDB from './db'
+
 export type SessionId = number
 export type ExerciseId = number
 export type SetId = number
@@ -200,3 +202,21 @@ export const exercises: Exercise[] = [
     ],
   },
 ]
+
+const db = localDB
+
+export async function initializeData() {
+  const existingSessions = await db.store('sessions').getAll<Session>()
+  if (existingSessions.length === 0) {
+    sessions.forEach(async (s) => {
+      await db.store('sessions').save(String(s.sessionId), s)
+    })
+  }
+
+  const existingExercises = await db.store('exercises').getAll()
+  if (existingExercises.length === 0) {
+    exercises.forEach(async (e) => {
+      await db.store('exercises').save(String(e.exerciseId), e)
+    })
+  }
+}
