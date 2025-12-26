@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { sessions, exercises } from '../lib/data'
+import { sessions, exercises, type Exercise, type SessionId } from '../lib/data'
 
 const router = useRouter()
 
-const goToWorkout = (sessionId: number) => {
+const goToWorkout = (sessionId: SessionId) => {
   router.push(`/workout/${sessionId}`)
 }
 
-const getExercisesForSession = (sessionId: number) => {
+const getExercisesForSession = (sessionId: SessionId): Exercise[] => {
   return exercises.filter((e) => e.sessionId === sessionId)
 }
 </script>

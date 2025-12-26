@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { ChevronLeft, SquarePen } from 'lucide-vue-next'
 import ExerciseCard from '../components/ExerciseCard.vue'
 import { sessions as allSessions, exercises as allExercises } from '../lib/data'
+import type { Session, Exercise, SessionId, ExerciseId, SetId } from '../lib/data'
 
 const props = defineProps<{
   sessionId: string
@@ -11,11 +12,13 @@ const props = defineProps<{
 
 const router = useRouter()
 
-const sessionId = Number(props.sessionId)
-const session = ref(allSessions.find((s) => s.sessionId === sessionId)!)
-const exercises = ref(allExercises.filter((e) => e.sessionId === session.value.sessionId))
+const sessionId = Number(props.sessionId) as SessionId
+const session = ref<Session>(allSessions.find((s) => s.sessionId === sessionId)!)
+const exercises = ref<Exercise[]>(
+  allExercises.filter((e) => e.sessionId === session.value.sessionId),
+)
 
-const updateSetCompleted = (exerciseId: number, setId: number, completed: boolean) => {
+const updateSetCompleted = (exerciseId: ExerciseId, setId: SetId, completed: boolean) => {
   const exercise = exercises.value.find((e) => e.exerciseId === exerciseId)
   if (exercise) {
     const set = exercise.sets.find((s) => s.setId === setId)
@@ -51,7 +54,7 @@ const goToEdit = () => {
         v-for="exercise in exercises"
         :key="exercise.exerciseId"
         :exercise="exercise"
-        @update:completed="
+        @update:set-completed="
           (setId, completed) => updateSetCompleted(exercise.exerciseId, setId, completed)
         "
       />

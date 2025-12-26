@@ -1,14 +1,14 @@
 <script setup lang="ts">
-const props = defineProps({
-  reps: Number,
-  weight: Number,
-  completed: Boolean,
-})
+import type { Set } from '../lib/data'
+
+const props = defineProps<{
+  set: Set
+}>()
 
 const emit = defineEmits(['update:completed'])
 
 const toggleCompleted = () => {
-  emit('update:completed', !props.completed)
+  emit('update:completed', !props.set.completed)
 }
 </script>
 
@@ -17,10 +17,10 @@ const toggleCompleted = () => {
     @click="toggleCompleted"
     :class="[
       'flex h-14 w-14 cursor-pointer flex-col items-center justify-center rounded-full border border-gray-300 text-sm',
-      props.completed ? 'bg-gray-100' : 'bg-white',
+      props.set.completed ? 'bg-gray-100' : 'bg-white',
     ]"
   >
-    <span class="font-bold">{{ props.reps }}</span>
-    <span>{{ props.weight }}</span>
+    <span class="font-bold">{{ props.set.reps }}</span>
+    <span>{{ props.set.weight }}</span>
   </button>
 </template>
