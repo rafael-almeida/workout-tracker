@@ -13,6 +13,7 @@ export default defineConfig({
     vueDevTools(),
     tailwindcss(),
     VitePWA({
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
       registerType: 'autoUpdate',
       manifest: {
         name: 'Workout Tracker',
