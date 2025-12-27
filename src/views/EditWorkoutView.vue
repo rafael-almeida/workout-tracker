@@ -62,7 +62,7 @@ const goBack = () => {
 </script>
 
 <template>
-  <section v-if="session">
+  <section v-if="session" class="flex flex-1 flex-col">
     <div class="mb-12 flex items-center justify-between border-b border-gray-300 pb-6">
       <button
         type="button"
@@ -75,7 +75,7 @@ const goBack = () => {
       <div class="h-7 w-7"></div>
     </div>
 
-    <form class="space-y-6" @submit.prevent="handleSubmit">
+    <form class="flex flex-1 flex-col space-y-6" @submit.prevent="handleSubmit">
       <label class="flex flex-col gap-2" for="session-name">
         <span class="font-semibold">Name</span>
         <input
@@ -100,7 +100,7 @@ const goBack = () => {
         />
       </label>
 
-      <div>
+      <div class="grow">
         <div class="flex items-center justify-between">
           <span class="font-semibold">Exercises</span>
           <button type="button" class="cursor-pointer">
