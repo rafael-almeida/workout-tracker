@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ActiveWorkoutView from '../views/ActiveWorkoutView.vue'
+import EditWorkoutView from '../views/EditWorkoutView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,6 +13,11 @@ const router = createRouter({
     {
       path: '/workout/:sessionId',
       component: ActiveWorkoutView,
+      props: true,
+    },
+    {
+      path: '/workout/:sessionId/edit',
+      component: EditWorkoutView,
       props: true,
     },
     // {

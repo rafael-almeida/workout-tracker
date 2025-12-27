@@ -7,6 +7,7 @@ export type SetId = number
 export interface Session {
   sessionId: SessionId
   sessionName: string
+  notes?: string
 }
 
 export interface Exercise {
