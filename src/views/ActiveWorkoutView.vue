@@ -35,6 +35,26 @@ const updateSetCompleted = async (exerciseId: ExerciseId, setId: SetId, complete
   }
 }
 
+const finishWorkout = async () => {
+  await Promise.all(
+    exercises.value.map(async (exercise) => {
+      const resetExercise = {
+        ...toRaw(exercise),
+        sets: exercise.sets.map((set) => ({ ...set, completed: false })),
+      }
+
+      await db.store('exercises').save(String(exercise.exerciseId), resetExercise)
+    }),
+  )
+
+  exercises.value = exercises.value.map((exercise) => ({
+    ...exercise,
+    sets: exercise.sets.map((set) => ({ ...set, completed: false })),
+  }))
+
+  router.push('/')
+}
+
 const goBack = () => {
   router.push('/')
 }
@@ -45,7 +65,7 @@ const goToEdit = () => {
 </script>
 
 <template>
-  <section v-if="session">
+  <section v-if="session" class="flex flex-1 flex-col">
     <div class="mb-12 flex items-center justify-between border-b border-gray-300 pb-6">
       <button class="flex h-7 w-7 cursor-pointer items-center justify-center" @click="goBack">
         <ChevronLeft :size="28" />
@@ -56,15 +76,25 @@ const goToEdit = () => {
       </button>
     </div>
 
-    <div class="flex flex-col gap-4">
-      <ExerciseCard
-        v-for="exercise in exercises"
-        :key="exercise.exerciseId"
-        :exercise="exercise"
-        @update:set-completed="
-          (setId, completed) => updateSetCompleted(exercise.exerciseId, setId, completed)
-        "
-      />
+    <div class="flex flex-1 flex-col space-y-6">
+      <div class="flex flex-col gap-4">
+        <ExerciseCard
+          v-for="exercise in exercises"
+          :key="exercise.exerciseId"
+          :exercise="exercise"
+          @update:set-completed="
+            (setId, completed) => updateSetCompleted(exercise.exerciseId, setId, completed)
+          "
+        />
+      </div>
+
+      <button
+        type="button"
+        class="w-full rounded bg-black py-4 text-white uppercase transition hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-70"
+        @click="finishWorkout"
+      >
+        Finish Workout
+      </button>
     </div>
   </section>
 </template>
