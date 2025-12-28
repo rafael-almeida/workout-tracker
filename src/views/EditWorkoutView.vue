@@ -115,15 +115,13 @@ const goBack = () => {
         </div>
       </div>
 
-      <div class="flex justify-end">
-        <button
-          type="submit"
-          class="w-full rounded bg-black py-4 text-white uppercase transition hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-70"
-          :disabled="isSaving"
-        >
-          {{ isSaving ? 'Saving…' : 'Save' }}
-        </button>
-      </div>
+      <button
+        type="submit"
+        class="w-full rounded bg-black py-4 text-white uppercase transition hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-70"
+        :disabled="isSaving"
+      >
+        {{ isSaving ? 'Saving…' : 'Save' }}
+      </button>
     </form>
   </section>
 </template>
